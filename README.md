@@ -5,36 +5,41 @@ Repositori ini berisi implementasi algoritma **Linear Regression** dan **Logisti
 ## 👤 Identitas Mahasiswa
 - **Nama**  : Muhamad Zaenal
 - **NIM**   : 241011400324
-- **Kelas** : [Isi Kelas Anda, contoh: 06TIDE001]
+- **Kelas** : 05TPLE005
 
 ---
 
-## 📊 Ringkasan Hasil Evaluasi Model
+##  Ringkasan Hasil Evaluasi Model
 
-### Bagian A – Linear Regression (Prediksi Penjualan dari Biaya Iklan)
-Model dilatih menggunakan metode *Normal Equation* dan *Gradient Descent*. Parameter terbaik (konvergen) ditemukan pada proses *Gradient Descent* dengan *Learning Rate* = 0.02.
-- **Nilai $R^2$ (R-Squared)** : [Isi nilai R2 dari tabel Soal A4, contoh: 0.85]
-- **RMSE (Data Testing)**     : [Isi nilai RMSE dari tabel Soal A4, contoh: 2.34]
-- **MAE (Data Testing)**      : [Isi nilai MAE dari tabel Soal A4, contoh: 1.95]
+## Ringkasan Hasil Pengerjaan (Soal A1 – Bonus)
 
-**Kesimpulan Bagian A:**
-Model menunjukkan bahwa variabel Biaya Iklan memiliki korelasi positif terhadap Penjualan. Namun, melakukan prediksi ekstrapolasi (misal: Biaya Iklan 12 juta yang berada di luar rentang data) berisiko tidak akurat karena adanya faktor saturasi pasar.
+### Bagian A – Linear Regression (Prediksi Penjualan)
+Model dilatih untuk memprediksi angka `Penjualan` berdasarkan `Biaya Iklan` menggunakan metode analitik (*Normal Equation*) dan iteratif (*Gradient Descent*).
+- **Hasil Pelatihan Terbaik**: Melalui *Gradient Descent* dengan *Learning Rate* = 0.02, model berhasil konvergen secara optimal dan menghasilkan bobot yang sama dengan hitungan *Normal Equation*, yaitu **Intercept ($b$) = 28.1439** dan **Koefisien ($m$) = 9.1356**.
+- **Evaluasi Model**: 
+  - $R^2$: 0.932561 (Data Training), 0.979957 (Data Testing)
+  - RMSE : 6.451991	 (Data Training), 3.695744`(Data Testing)
+- **Analisis Prediksi**: Terdapat korelasi linear positif antara biaya iklan dan penjualan. Namun, prediksi *ekstrapolasi* (misal: menebak target penjualan untuk biaya iklan 12 juta yang jauh di luar data latih) terbukti tidak ideal karena di dunia nyata terdapat titik jenuh pasar (*diminishing returns*).
 
-### Bagian B – Logistic Regression (Klasifikasi Email Spam)
-Model dilatih menggunakan metode *Gradient Descent* untuk memprediksi apakah suatu email adalah Spam (1) atau Bukan Spam (0) berdasarkan *Jumlah Link* dan *Kata Promo*.
-- **Akurasi**   : [Isi nilai Akurasi dari Soal B3, contoh: 0.92]
-- **Precision** : [Isi nilai Precision dari Soal B3, contoh: 0.95]
-- **Recall**    : [Isi nilai Recall dari Soal B3, contoh: 0.88]
-- **F1-Score**  : [Isi nilai F1-Score dari Soal B3, contoh: 0.91]
+### Bagian B – Logistic Regression (Filter Email Spam)
+Model klasifikasi biner dilatih menggunakan *Gradient Descent* untuk mendeteksi email `Spam` atau `Bukan Spam` berdasarkan fitur `JumlahLink` dan `KataPromo`.
+- **Pelatihan**: Kurva *Log Loss* berhasil menurun drastis dan stabil pada *Learning Rate* = 0.1 setelah ribuan iterasi.
+- **Evaluasi Threshold (Batas Probabilitas)**:
+  - Default (0.5): `[Isi dengan angka Akurasi/Precision dari tabel B5]`
+  - Pilihan Optimal (0.7): Dalam konteks filter email, kesalahan *False Positive* (email penting salah tebak masuk spam) sangat merugikan. Menaikkan *threshold* ke **0.7** terbukti meningkatkan nilai **Precision** dan menekan *False Positive* serendah mungkin.
+- **Decision Boundary**: Visualisasi menunjukkan titik-titik kesalahan tebak (*error*) mayoritas berada di area abu-abu atau *outlier* yang sulit dipisahkan hanya dengan garis linear tegak lurus.
 
-**Kesimpulan Bagian B:**
-Dalam penyaringan filter Spam, kesalahan *False Positive* (email penting masuk spam) lebih merugikan daripada *False Negative*. Oleh karena itu, *Threshold* yang lebih tinggi (0.7) dipilih untuk memaksimalkan nilai *Precision* dan menekan angka *False Positive*.
+### Bagian C – Pemahaman Konsep
+Bagian ini menguraikan analisis teoretis mencakup:
+- Alasan *Logistic Regression* tergolong klasifikasi (dibantu oleh peran fungsi *Sigmoid* mengubah garis linear menjadi probabilitas 0-1).
+- Keunggulan komputasi *Gradient Descent* untuk data besar dibanding memori raksasa yang dibutuhkan oleh invers matriks pada *Normal Equation*.
+- Pentingnya evaluasi pada *data testing* murni untuk mencegah kebohongan akurasi akibat *overfitting*.
+- Pemilihan *Log Loss* untuk klasifikasi agar ruang pencarian *error* tetap berbentuk *convex* (mangkuk mulus), berbeda dengan kontur *MSE* yang bisa bergelombang jika digunakan pada probabilitas.
 
-### Bagian Bonus – Perbandingan dengan Scikit-Learn
-- **Linear Regression**: Hasil perhitungan intersep dan koefisien manual (*Normal Equation*) identik 100% dengan hasil `scikit-learn`.
-- **Logistic Regression**: Terdapat sedikit perbedaan koefisien. Hal ini dikarenakan algoritma manual murni menggunakan *Gradient Descent* biasa, sedangkan default dari `scikit-learn` menerapkan regulariasi penalti L2 (Ridge) untuk mencegah *overfitting*.
-
----
+### 🌟 Bonus – Perbandingan dengan Scikit-Learn
+Pengujian ulang menggunakan fungsi bawaan `sklearn.linear_model` menghasilkan komparasi berikut:
+- **Linear Regression**: Bobot manual dan bawaan *library* **identik 100%** ($b$ = 28.1439, $m$ = 9.1356) karena keduanya berbasis *Ordinary Least Squares* tanpa regulariasi.
+- **Logistic Regression**: Terdapat selisih bobot antara manual ($b$ = -11.4233, $m_1$ = 1.0424, $m_2$ = 0.8993) dengan default Scikit-Learn ($b$ = -10.6331, $m_1$ = 0.9605, $m_2$ = 0.8379). Perbedaan ini terjadi karena `LogisticRegression` pada Scikit-Learn secara *default* mengaktifkan fitur penalti/regulariasi L2 (Ridge) untuk menyusutkan nilai bobot agar tidak *overfitting*.
 
 ## 📁 Struktur Repositori
 - `README.md` : Dokumentasi informasi identitas dan ringkasan hasil evaluasi.
